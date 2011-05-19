@@ -140,13 +140,8 @@ module CarrierWave
     #     end
     #
     def mount_uploader(column, uploader=nil, options={}, &block)
-      if block_given?
-        uploader = Class.new(uploader || CarrierWave::Uploader::Base)
-        uploader.class_eval(&block)
-        uploader.recursively_apply_block_to_versions(&block)
-      else
-        uploader ||= Class.new(CarrierWave::Uploader::Base)
-      end
+      uploader ||= Class.new(CarrierWave::Uploader::Base)
+      uploader.class_eval(&block) if block_given?
 
       uploaders[column.to_sym] = uploader
       uploader_options[column.to_sym] = options
